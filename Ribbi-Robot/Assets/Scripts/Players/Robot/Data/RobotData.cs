@@ -11,10 +11,4 @@ public class RobotData : ScriptableObject
 
     [SerializeField, Range(0f, 100f)]
     public float maxAcceleration = 10f;
-
-    [SerializeField, Range(0f, 1f)]
-    public float bounciness = 0.5f;
-
-    [SerializeField]
-    public Rect allowedArea = new Rect(-5f, -5f, 10f, 10f);
 }

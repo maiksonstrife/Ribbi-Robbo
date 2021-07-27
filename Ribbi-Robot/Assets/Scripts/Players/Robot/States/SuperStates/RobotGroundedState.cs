@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RobotGroundedState : RobotState
 {
-
+    protected Vector3 RobotInput;
 
     public RobotGroundedState(Robot robot, RobotStateMachine stateMachine, RobotData playerData, string animBoolName) : base(robot, stateMachine, playerData, animBoolName)
     {
@@ -38,6 +38,7 @@ public class RobotGroundedState : RobotState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
+        RobotInput = new Vector3(robot.Input.NormalizedInput.x, 0f, robot.Input.NormalizedInput.y);
     }
 
     public override void PhysicsUpdate()

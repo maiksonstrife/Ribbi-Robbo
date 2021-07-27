@@ -40,7 +40,7 @@ public class RobotIdleState : RobotGroundedState
 
         if (!isExitingState)
         {
-            if (robot.Input.NormalizedInput.x != 0)
+            if (robot.Input.NormalizedInput != Vector2.zero)
             {
                 stateMachine.ChangeState(robot.MoveState);
             }

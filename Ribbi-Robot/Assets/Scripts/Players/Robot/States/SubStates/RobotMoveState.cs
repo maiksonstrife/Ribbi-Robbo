@@ -36,7 +36,7 @@ public class RobotMoveState : RobotGroundedState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
-        robot.Movement();
+        robot.SetDesiredVelocity(RobotInput * robotData.maxSpeed);
 
         if (!isExitingState)
         {
@@ -54,5 +54,6 @@ public class RobotMoveState : RobotGroundedState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
+        robot.Movement();
     }
 }

@@ -18,6 +18,7 @@ public class RobotInput : MonoBehaviour
     public void OnMoveInput(InputAction.CallbackContext context)
     {
         RawMovementInput = context.ReadValue<Vector2>();
-        NormalizedInput = Vector2.ClampMagnitude(RawMovementInput, 1f);
+        NormalizedInput = RawMovementInput.normalized; //Preserva comprimento (caminha por toda area do circulo)
+        //NormalizedInput = Vector2.ClampMagnitude(RawMovementInput, 1f); //Preserva Direção (caminha somente a extensão do circulo)
     }
 }

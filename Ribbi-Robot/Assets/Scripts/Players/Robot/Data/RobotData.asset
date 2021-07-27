@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RobotData
   m_EditorClassIdentifier: 
   maxSpeed: 10
-  maxAcceleration: 10
+  maxAcceleration: 13.5
   bounciness: 0.5
   allowedArea:
     serializedVersion: 2

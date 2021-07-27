@@ -12,10 +12,11 @@ public class Robot : MonoBehaviour
     private RobotData robotData;
     public RobotInput Input { get; private set; }
     public Animator Anim { get; private set; }
+    public Rigidbody RB { get; private set; }
 
     public Core Core { get; private set; }
 
-    Vector3 velocity;
+    Vector3 velocity, desiredVelocity;
 
     private Vector2 workspace;
     private string _previousState;
@@ -30,6 +31,7 @@ public class Robot : MonoBehaviour
 
     void Start()
     {
+        RB = GetComponent<Rigidbody>();
         Input = GetComponent<RobotInput>();
         StateMachine.Initialize(IdleState);
     }
@@ -44,42 +46,34 @@ public class Robot : MonoBehaviour
         StateMachine.CurrentState.PhysicsUpdate();
     }
 
-    public void SetVelocity(Vector3 velocity) => this.velocity = velocity;
+    /// <summary>
+    /// This Function will immediately apply new Velocity
+    /// </summary>
+    /// <param name="velocity"></param>
+    public void SetVelocity(Vector3 velocity)
+    {
+        RB.velocity = velocity;
+        this.velocity = Vector3.zero;
+    }
+
+    /// <summary>
+    /// This Function will make the velocity lags towards MaxAceleration that will be applied by the time the next frame occurs
+    /// </summary>
+    /// <param name="desiredVelocity"></param>
+    public void SetDesiredVelocity(Vector3 desiredVelocity) => this.desiredVelocity = desiredVelocity;
 
     public void Movement()
     {
-        Vector3 desiredVelocity =
-            new Vector3(Input.NormalizedInput.x, 0f, Input.NormalizedInput.y) * robotData.maxSpeed;
+        RB.velocity = velocity;
 
-        float maxSpeedChange = robotData.maxAcceleration * Time.deltaTime;
+        float maxDirectionResponsiveness = robotData.maxAcceleration * Time.deltaTime;
+
         velocity.x =
-            Mathf.MoveTowards(velocity.x, desiredVelocity.x, maxSpeedChange);
+            Mathf.MoveTowards(velocity.x, desiredVelocity.x, maxDirectionResponsiveness);
         velocity.z =
-            Mathf.MoveTowards(velocity.z, desiredVelocity.z, maxSpeedChange);
+            Mathf.MoveTowards(velocity.z, desiredVelocity.z, maxDirectionResponsiveness);
 
-        Vector3 displacement = velocity * Time.deltaTime;
-        Vector3 newPosition = transform.localPosition + displacement;
-        if (newPosition.x < robotData.allowedArea.xMin)
-        {
-            newPosition.x = robotData.allowedArea.xMin;
-            velocity.x = -velocity.x * robotData.bounciness;
-        }
-        else if (newPosition.x > robotData.allowedArea.xMax)
-        {
-            newPosition.x = robotData.allowedArea.xMax;
-            velocity.x = -velocity.x * robotData.bounciness;
-        }
-        if (newPosition.z < robotData.allowedArea.yMin)
-        {
-            newPosition.z = robotData.allowedArea.yMin;
-            velocity.z = -velocity.z * robotData.bounciness;
-        }
-        else if (newPosition.z > robotData.allowedArea.yMax)
-        {
-            newPosition.z = robotData.allowedArea.yMax;
-            velocity.z = -velocity.z * robotData.bounciness;
-        }
-        transform.localPosition = newPosition;
+        RB.velocity = velocity;
     }
 
 
