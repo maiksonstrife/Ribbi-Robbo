@@ -26,7 +26,7 @@ public class RobotIdleState : RobotGroundedState
     public override void Enter()
     {
         base.Enter();
-        robot.SetVelocity(Vector3.zero);
+        robot.Core.Movement.SetDesiredVelocity(Vector3.zero);
     }
 
     public override void Exit()
@@ -37,6 +37,7 @@ public class RobotIdleState : RobotGroundedState
     public override void LogicUpdate()
     {
         base.LogicUpdate();
+
 
         if (!isExitingState)
         {
@@ -54,5 +55,6 @@ public class RobotIdleState : RobotGroundedState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
+        robot.Core.Movement.CharacterMovement();
     }
 }

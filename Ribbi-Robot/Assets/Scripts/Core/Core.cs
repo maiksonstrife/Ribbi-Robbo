@@ -4,15 +4,48 @@ using UnityEngine;
 
 public class Core : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public Movement Movement
     {
-        
+        get
+        {
+            if (movement != null)
+            {
+                return movement;
+            }
+
+            Debug.LogError("No Movement Core Component on " + transform.parent.name);
+            return null;
+        }
+
+        private set { movement = value; }
+    }
+    public CollisionSenses CollisionSenses
+    {
+        get
+        {
+            if (collisionSenses != null)
+            {
+                return collisionSenses;
+            }
+
+            Debug.LogError("No Collision Senses Core Component on " + transform.parent.name);
+            return null;
+        }
+
+        private set { collisionSenses = value; }
     }
 
-    // Update is called once per frame
-    void Update()
+    private Movement movement;
+    private CollisionSenses collisionSenses;
+
+    private void Awake()
     {
-        
+        Movement = GetComponentInChildren<Movement>();
+        CollisionSenses = GetComponentInChildren<CollisionSenses>();
+    }
+
+    public void LogicUpdate()
+    {
+        Movement.LogicUpdate();
     }
 }

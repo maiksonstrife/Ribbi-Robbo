@@ -18,12 +18,12 @@ public class Robot : MonoBehaviour
 
     Vector3 velocity, desiredVelocity;
 
-    private Vector2 workspace;
     private string _previousState;
     private bool _canLog;
 
     private void Awake()
     {
+        Core = GetComponentInChildren<Core>();
         StateMachine = new RobotStateMachine();
         IdleState = new RobotIdleState(this, StateMachine, robotData, "idle");
         MoveState = new RobotMoveState(this, StateMachine, robotData, "move");
@@ -38,6 +38,7 @@ public class Robot : MonoBehaviour
 
     private void Update()
     {
+        Core.LogicUpdate();
         StateMachine.CurrentState.LogicUpdate();
     }
 
@@ -46,44 +47,16 @@ public class Robot : MonoBehaviour
         StateMachine.CurrentState.PhysicsUpdate();
     }
 
-    /// <summary>
-    /// This Function will immediately apply new Velocity
-    /// </summary>
-    /// <param name="velocity"></param>
-    public void SetVelocity(Vector3 velocity)
-    {
-        RB.velocity = velocity;
-        this.velocity = Vector3.zero;
-    }
-
-    /// <summary>
-    /// This Function will make the velocity lags towards MaxAceleration that will be applied by the time the next frame occurs
-    /// </summary>
-    /// <param name="desiredVelocity"></param>
-    public void SetDesiredVelocity(Vector3 desiredVelocity) => this.desiredVelocity = desiredVelocity;
-
-    public void Movement()
-    {
-        RB.velocity = velocity;
-
-        float maxDirectionResponsiveness = robotData.maxAcceleration * Time.deltaTime;
-
-        velocity.x =
-            Mathf.MoveTowards(velocity.x, desiredVelocity.x, maxDirectionResponsiveness);
-        velocity.z =
-            Mathf.MoveTowards(velocity.z, desiredVelocity.z, maxDirectionResponsiveness);
-
-        RB.velocity = velocity;
-    }
-
-
 #if UNITY_EDITOR
     void OnGUI()
     {
-        string currentState = StateMachine.CurrentState.ToString();
-        GUI.Box(new Rect(0, 0, 200, 25), currentState);
+        string parentState = StateMachine.CurrentState.ParentToString();
+        GUI.Button(new Rect(0, 0, 200, 25), parentState);
 
-        if (GUI.Button(new Rect(0, Screen.height - 25, 200, 25), $"Create States Log        {_canLog}")) _canLog = !_canLog;
+        string currentState = StateMachine.CurrentState.ToString();
+        GUI.Box(new Rect(205, 0, 200, 25), currentState);
+
+        if (GUI.Button(new Rect(0, Screen.height - 25, 200, 25), $"Create States Log  {_canLog}")) _canLog = !_canLog;
 
         if (_previousState != currentState && _canLog) Debug.Log(currentState);
 

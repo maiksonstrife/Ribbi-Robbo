@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -57,4 +58,11 @@ public class RobotState
     public virtual void AnimationTrigger() { }
 
     public virtual void AnimationFinishTrigger() => isAnimationFinished = true;
+
+    public virtual string ParentToString()
+    {
+
+        Type superClass = GetType().BaseType;
+        return superClass.Name;
+    }
 }

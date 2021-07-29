@@ -5,6 +5,7 @@ using UnityEngine;
 public class RobotGroundedState : RobotState
 {
     protected Vector3 RobotInput;
+    protected string SuperClass;
 
     public RobotGroundedState(Robot robot, RobotStateMachine stateMachine, RobotData playerData, string animBoolName) : base(robot, stateMachine, playerData, animBoolName)
     {
@@ -44,5 +45,6 @@ public class RobotGroundedState : RobotState
     public override void PhysicsUpdate()
     {
         base.PhysicsUpdate();
+        core.Movement.SetMaxAcceleration(robotData.maxAcceleration * Time.deltaTime);
     }
 }
